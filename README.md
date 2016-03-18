@@ -43,3 +43,17 @@ any passed through data object properties.
 */
 
 ```
+
+```
+
+var api = require('accelerated.api');
+
+var apiEmails = new require('acceleratd.api.emails')();
+
+api.useModels([ 
+	[apiEmails.key, apiEmails.model]
+]);
+
+api.run();
+
+```
