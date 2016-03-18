@@ -1,24 +1,25 @@
 module.exports = (function() {
 
-	var moduleKey = 'emails';
-	var moduleName = 'Email';
+    // you can require this or other modules using accelerated.api.module 
+    var module = require('accelerated.api.module');
+    
+    // set your module's key for reference by middlwares, models, and routes 
+    module.setKey('emails');
 
-	/* Careful - don't modify below unless you're sure! */
+    // set your module's name for logging output 
+    module.setName('Emails Module');
 
-	var Module = {
+    // you can choose to extend your module's model
+    module.extendModel(function(model, express, app, models) {
 
-		key: moduleKey,
+    	// choosing to keep model isolated into another commonjs module
+		model = require('./model.js')(model, express, app, models);    	
 
-		name: moduleName,
+        // modify model to include user create, retrieve, update, and delete methods
+        return model;
 
-		middleware: require('./middleware'),
+    });
 
-		model: require('./model'),
-
-		route: require('./route')
-	
-	};
-
-	return Module;
+    return module;
 
 })();

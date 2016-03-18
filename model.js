@@ -1,13 +1,13 @@
-module.exports = function(express, app, models) {
+module.exports = function(model, express, app, models) {
 
 	/*------
 	Dependencies
 	------------*/
 
-	var _ = require('underscore');
 	var mustache = require('mustache');
 	var postmark = require('postmark');
 	var fs = require('fs');
+	var path = require('path');
 
 	/*------
 	Helpers
@@ -15,16 +15,22 @@ module.exports = function(express, app, models) {
 
 	var helpers = {
 
-		emailParts: function(template, data) {
+		getEmailParts: function(template, data) {
 			return {
 				body: this.renderTemplate(template, 'Body.html', data),
 				subject: this.renderTemplate(template, 'Subject.txt', data)
 			}
 		},
 
+		getTemplateFilepath: function(template, typeAndExtension) {
+			var dirpath = template[1];
+			var basename = template[0] + typeAndExtension;
+			var filepath = path.join(dirpath, templates, basename);
+			return filepath;
+		},
+
 		renderTemplate: function(template, typeAndExtension, data) {
-			var dir = template[1];
-			var filepath = dir + '/templates/' + template[0] + typeAndExtension;
+			var filepath = this.getTemplateFilepath(template, typeAndExtension);
 			var contents = fs.readFileSync(filepath, 'utf8');
 			var rendered = mustache.render(contents, data);
 			return rendered;
@@ -39,8 +45,11 @@ module.exports = function(express, app, models) {
 	var Model = {
 
 		sendTo: function(to, template, data, successCallback, errorCallback) {
-			var email = helpers.emailParts(template, data);
+			
+			var email = helpers.getEmailParts(template, data);
+			
 			var client = new postmark.Client(process.env.POSTMARK_API_TOKEN);
+			
 			client.sendEmail({
 				From: process.env.POSTMARK_FROM,
 				To: to,
@@ -50,6 +59,7 @@ module.exports = function(express, app, models) {
 				if (err && errorCallback) { return errorCallback(err); }
 				if (successCallback) { return successCallback(success); }
 			});
+
 		}
 
 	};
