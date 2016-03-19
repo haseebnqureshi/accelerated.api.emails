@@ -1,4 +1,4 @@
-module.exports = function(model, express, app, models) {
+module.exports = function(model, express, app, models, settings) {
 
 	/*------
 	Dependencies
