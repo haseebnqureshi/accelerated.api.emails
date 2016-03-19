@@ -48,7 +48,7 @@ any passed through data object properties.
 
 var api = require('accelerated.api');
 
-var apiEmails = new require('acceleratd.api.emails')();
+var apiEmails = require('acceleratd.api.emails').use();
 
 api.useModels([ 
 	[apiEmails.key, apiEmails.model]
