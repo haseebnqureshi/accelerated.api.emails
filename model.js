@@ -25,7 +25,7 @@ module.exports = function(model, express, app, models, settings) {
 		getTemplateFilepath: function(template, typeAndExtension) {
 			var dirpath = template[1];
 			var basename = template[0] + typeAndExtension;
-			var filepath = path.join(dirpath, templates, basename);
+			var filepath = path.join(dirpath, template, basename);
 			return filepath;
 		},
 
